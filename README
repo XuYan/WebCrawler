@@ -1,0 +1,5 @@
+This is a python webpage crawler that takes css selectors as inputs and outputs information you care to a file.
+It works like a pipe. User specifies a start url and multiple CSS selectors.
+Applying the first CSS selector to the start url webpage will redirect to a second webpage,
+to which we apply the second CSS selector will lead us to the third webpage, so on and so forth.
+The whole process works recursively util the last CSS selector is used to get final results.
