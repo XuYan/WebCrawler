@@ -1,0 +1,14 @@
+status: 200
+content-length: 340
+content-location: http://www.yellowpages.comhttp://kp-redirector.g.yp.com/rd/ws/conversion/redirect?adDest=http%3A%2F%2Fwww.bucadibeppo.com%2Frestaurants%2Fwa%2Fseattle%2F&value=HUnoiSDM2sbrAI78OB-0ALVEae4qb12YmG5F0ploVFYu6BXEKa28IxtEnwvTv%2BHyvbEsG-APZKfyyExMUXtCYwgnCVL1EtpE0Fg%2Bc443k%2B8ZUGCf1rlgaIx3V8ByEQN1Vd0OLeNDD6DQqwj9%2BerDgrsvwkWrcaL3Zycl-GNAADqQ-eeFsDyFdMV3%2B4mUFOp5&srId=09ad608c-8c27-4526-931b-6819110016c8
+expires: Fri, 14 Oct 2016 04:47:21 GMT
+vary: Accept-Encoding
+server: nginx
+connection: close
+-content-encoding: gzip
+cache-control: no-cache
+date: Fri, 14 Oct 2016 04:47:22 GMT
+content-type: text/html
+-varied-accept-encoding: gzip, deflate
+
+<html><head><meta http-equiv="refresh" content="0;url=http://search.frontier.com/search/?q=http://www.yellowpages.comhttp/kp-redirector.g.yp.com/rd/ws/conversion/redirect&t=0"/></head><body><script>window.location="http://search.frontier.com/search/?q="+escape(window.location)+"&r="+escape(document.referrer)+"&t=0";</script></body></html>

@@ -1,0 +1,32 @@
+status: 301
+x-pool: /Common/ypu_9000 10.1.26.189 9000::up
+content-length: 74
+content-location: http://www.yellowpages.com/listings/504556701/menu?lid=504556701
+x-powered-by: Express
+set-cookie: vrid=a0e1f436-2f7e-4d5c-811d-e5872bb549e0; Max-Age=15552000;
+ Domain=.yellowpages.com; Path=/;
+ Expires=Wed, 12 Apr 2017 04:06:51 GMT, bucket=ypu%3Adefault; Max-Age=31536000;
+ Domain=.yellowpages.com; Path=/;
+ Expires=Sat, 14 Oct 2017 04:06:51 GMT, bucketsrc=default; Max-Age=31536000;
+ Domain=.yellowpages.com; Path=/;
+ Expires=Sat, 14 Oct 2017 04:06:51 GMT,
+ vrid=f59bd28a-a717-428a-891d-a295e80425f1; Max-Age=15552000;
+ Domain=.yellowpages.com; Path=/;
+ Expires=Wed, 12 Apr 2017 04:06:51 GMT,
+ express:sess=eyJka3MiOiJlNTBjZjA1MS05N2I1LTQ4YjAtYTA2Mi1lYzQxOTJhNTBmY2IifQ==;
+ path=/; expires=Sun, 14 Oct 2018 04:06:52 GMT;
+ httponly, express:sess.sig=6NRVQphpieZ-4835jJ5AYqfcrMs; path=/;
+ expires=Sun, 14 Oct 2018 04:06:52 GMT; httponly
+vary: User-Agent, Accept, Accept-Encoding
+server: nginx
+connection: keep-alive
+x-vip: /Common/ypu.v.wc1.yp.com_80::199.120.61.197
+location: http://www.yellowpages.com/bellevue-wa/mip/mariposa-504556701/menu
+date: Fri, 14 Oct 2016 04:06:52 GMT
+p3p: CP="This site does not have a p3p policy."
+content-type: text/plain; charset=utf-8
+-x-permanent-redirect-url: http://www.yellowpages.com/bellevue-wa/mip/mariposa-504556701/menu
+-varied-user-agent: Python-httplib2/0.7.2 (gzip)
+-varied-accept-encoding: gzip, deflate
+
+Moved Permanently. Redirecting to /bellevue-wa/mip/mariposa-504556701/menu

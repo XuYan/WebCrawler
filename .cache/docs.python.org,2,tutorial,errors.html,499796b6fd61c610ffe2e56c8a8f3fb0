@@ -9,12 +9,12 @@ server: nginx
 last-modified: Fri, 30 Sep 2016 20:07:35 GMT
 connection: keep-alive
 etag: "57eec607-bacb"
-x-cache-hits: 3
-x-served-by: cache-sjc3627-SJC
-date: Tue, 11 Oct 2016 06:09:19 GMT
+x-cache-hits: 1
+x-served-by: cache-sjc3621-SJC
+date: Fri, 14 Oct 2016 05:38:37 GMT
 x-clacks-overhead: GNU Terry Pratchett
 content-type: text/html
-age: 580787
+age: 232737
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

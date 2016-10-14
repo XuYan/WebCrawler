@@ -1,0 +1,32 @@
+status: 301
+x-pool: /Common/ypu_9000 10.1.26.191 9000::up
+content-length: 80
+content-location: http://www.yellowpages.com/listings/5613704/menu?lid=438128096
+x-powered-by: Express
+set-cookie: vrid=dd8c356d-d82c-491b-ae42-f9988b886d4d; Max-Age=15552000;
+ Domain=.yellowpages.com; Path=/;
+ Expires=Wed, 12 Apr 2017 02:51:39 GMT, bucket=ypu%3Adefault; Max-Age=31536000;
+ Domain=.yellowpages.com; Path=/;
+ Expires=Sat, 14 Oct 2017 02:51:39 GMT, bucketsrc=default; Max-Age=31536000;
+ Domain=.yellowpages.com; Path=/;
+ Expires=Sat, 14 Oct 2017 02:51:39 GMT,
+ vrid=7f2643ad-5bfb-475b-91e5-1b544d323e4c; Max-Age=15552000;
+ Domain=.yellowpages.com; Path=/;
+ Expires=Wed, 12 Apr 2017 02:51:39 GMT,
+ express:sess=eyJka3MiOiI4ZGU3Zjc3Yi0xYTM2LTQ2ZDktYjkzYi1lZjg5NGFhYTRhZmMifQ==;
+ path=/; expires=Sun, 14 Oct 2018 02:51:40 GMT;
+ httponly, express:sess.sig=oYt7CGJ0N3AMs345wf1eBahJr3k; path=/;
+ expires=Sun, 14 Oct 2018 02:51:40 GMT; httponly
+vary: User-Agent, Accept, Accept-Encoding
+server: nginx
+connection: keep-alive
+x-vip: /Common/ypu.v.wc1.yp.com_80::199.120.61.197
+location: http://www.yellowpages.com/kent-wa/mip/clowns-unlimited-5613704/services
+date: Fri, 14 Oct 2016 02:51:40 GMT
+p3p: CP="This site does not have a p3p policy."
+content-type: text/plain; charset=utf-8
+-x-permanent-redirect-url: http://www.yellowpages.com/kent-wa/mip/clowns-unlimited-5613704/services
+-varied-user-agent: Python-httplib2/0.7.2 (gzip)
+-varied-accept-encoding: gzip, deflate
+
+Moved Permanently. Redirecting to /kent-wa/mip/clowns-unlimited-5613704/services

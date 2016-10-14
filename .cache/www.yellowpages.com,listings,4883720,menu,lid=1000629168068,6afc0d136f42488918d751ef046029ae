@@ -1,0 +1,32 @@
+status: 301
+x-pool: /Common/ypu_9000 10.1.26.87 9000::up
+content-length: 106
+content-location: http://www.yellowpages.com/listings/4883720/menu?lid=1000629168068
+x-powered-by: Express
+set-cookie: vrid=67f55551-c611-43a1-bd60-9fe1fb0e4d3f; Max-Age=15552000;
+ Domain=.yellowpages.com; Path=/;
+ Expires=Wed, 12 Apr 2017 02:52:15 GMT, bucket=ypu%3Adefault; Max-Age=31536000;
+ Domain=.yellowpages.com; Path=/;
+ Expires=Sat, 14 Oct 2017 02:52:15 GMT, bucketsrc=default; Max-Age=31536000;
+ Domain=.yellowpages.com; Path=/;
+ Expires=Sat, 14 Oct 2017 02:52:15 GMT,
+ vrid=e4206818-671a-4e80-a205-cc6bff66112f; Max-Age=15552000;
+ Domain=.yellowpages.com; Path=/;
+ Expires=Wed, 12 Apr 2017 02:52:15 GMT,
+ express:sess=eyJka3MiOiJkNjUxYWRkYS0wMDgzLTQ4ZTAtYWNiZi01NjNjMjcyMTEyNjkifQ==;
+ path=/; expires=Sun, 14 Oct 2018 02:52:16 GMT;
+ httponly, express:sess.sig=QjwSRqP544y5TN7hlDDtihV53jc; path=/;
+ expires=Sun, 14 Oct 2018 02:52:16 GMT; httponly
+vary: User-Agent, Accept, Accept-Encoding
+server: nginx
+connection: keep-alive
+x-vip: /Common/ypu.v.wc1.yp.com_80::199.120.61.197
+location: http://www.yellowpages.com/woodinville-wa/mip/the-bistro-at-hollywood-schoolhouse-4883720/services
+date: Fri, 14 Oct 2016 02:52:16 GMT
+p3p: CP="This site does not have a p3p policy."
+content-type: text/plain; charset=utf-8
+-x-permanent-redirect-url: http://www.yellowpages.com/woodinville-wa/mip/the-bistro-at-hollywood-schoolhouse-4883720/services
+-varied-user-agent: Python-httplib2/0.7.2 (gzip)
+-varied-accept-encoding: gzip, deflate
+
+Moved Permanently. Redirecting to /woodinville-wa/mip/the-bistro-at-hollywood-schoolhouse-4883720/services
