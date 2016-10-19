@@ -1,1 +1,1 @@
-python crawler.py -url "https://docs.python.org/2/tutorial/errors.html" -css "information|attribute href|separate|h2 > a.headerlink"
+python crawler_st.py -url "https://docs.python.org/2/tutorial/errors.html" -css "information|attribute href|separate|h2 > a.headerlink"

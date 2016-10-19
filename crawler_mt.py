@@ -5,8 +5,6 @@ from bs4 import BeautifulSoup
 import time
 import threading
 
-thread_list = []
-
 def defensiveCopy(info_list):
 	copy = []
 	for info in info_list:
@@ -14,6 +12,7 @@ def defensiveCopy(info_list):
 	return copy
 
 class CrawlThread(threading.Thread):
+	terminated = False
 	def __init__(self, crawler, info_list, current_level_info, next_url, next_level):
 		"""
 			Parameters
@@ -29,10 +28,12 @@ class CrawlThread(threading.Thread):
 		self.info_list = defensiveCopy(info_list)
 		self.next_url = next_url
 		self.next_level = next_level
+		self.daemon = True
 
 	def run(self):
-		self.info_list.extend(self.current_level_info)
-		self.crawler.crawl(self.next_url, self.next_level, self.info_list)
+		if not CrawlThread.terminated:
+			self.info_list.extend(self.current_level_info)
+			self.crawler.crawl(self.next_url, self.next_level, self.info_list)
 
 class Selector():
 	def __init__(self, css_selector):
@@ -82,7 +83,6 @@ class Crawler():
 					current_level_info.append(list_info_list[j][i])
 				crawl_thread = CrawlThread(self, information_list, current_level_info, redirection_links[i], level + 1)
 				crawl_thread.start()
-				thread_list.append(crawl_thread)
 
 		else: # This is the last level in our crawling process
 			(target_length, list_info_list) = self.getListInfoList(html_doc, selectors)
@@ -208,12 +208,17 @@ def parseArgs():
 	return (args.url, args.css, args.domain)
 
 if __name__ == '__main__':
-	base_url, css_selectors, domain = parseArgs()
-	crawler = Crawler(css_selectors, domain)
-	start_time = time.time()
-	crawler.crawl(base_url, 0, [])
-	for thread in thread_list:
-		thread.join()
-	end_time = time.time()
-	print("Running Time: " + str(end_time - start_time) + " seconds")
-	crawler.output.close()
+	try:
+		base_url, css_selectors, domain = parseArgs()
+		crawler = Crawler(css_selectors, domain)
+		start_time = time.time()
+		crawler.crawl(base_url, 0, [])
+		while threading.active_count() > 1:
+			time.sleep(0.5)
+		end_time = time.time()
+		print("Running Time: " + str(end_time - start_time) + " seconds")
+		crawler.output.close()
+	except KeyboardInterrupt:
+		print("Program is terminated with ctrl + c")
+		CrawlThread.terminated = True
+		raise
