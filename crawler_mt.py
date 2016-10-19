@@ -74,7 +74,8 @@ class Crawler():
 
 			self.moveToLast(selectors, redirection_selector_index)
 
-			(target_length, list_info_list) = self.getListInfoList(html_doc, selectors[0:-1], expect_length = redirection_link_count)
+			(target_length, list_info_list) = self.getListInfoList(
+				html_doc, selectors[0:-1], expect_length = redirection_link_count)
 			info_count = len(list_info_list) # The total number of newly-added info in this level
 
 			for i in range(redirection_link_count):
