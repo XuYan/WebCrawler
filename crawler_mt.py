@@ -11,9 +11,19 @@ def defensiveCopy(info_list):
 		copy.append(info)
 	return copy
 
+class ThreadPool():
+	@staticmethod
+	def init(pool_size, crawler):
+		ThreadPool.pool_size = pool_size
+		ThreadPool.crawler = crawler
+
+	@staticmethod
+	def poll():
+		print("Starting new thread...")
+		return CrawlThread(ThreadPool.crawler) if threading.active_count() < ThreadPool.pool_size + 1 else None
+
 class CrawlThread(threading.Thread):
-	terminated = False
-	def __init__(self, crawler, info_list, current_level_info, next_url, next_level):
+	def __init__(self, crawler):
 		"""
 			Parameters
 			----------
@@ -24,16 +34,19 @@ class CrawlThread(threading.Thread):
 		"""
 		threading.Thread.__init__(self)
 		self.crawler = crawler
-		self.current_level_info = current_level_info
-		self.info_list = defensiveCopy(info_list)
-		self.next_url = next_url
-		self.next_level = next_level
 		self.daemon = True
 
+	def setProperty(self, info_list = None, current_level_info = None, next_url = None, next_level = None):
+		if info_list is None or current_level_info is None or next_url is None or next_level is None:
+			raise ValueError("Unspecified argument is not allowed")
+		self.info_list = defensiveCopy(info_list)
+		self.current_level_info = current_level_info
+		self.next_url = next_url
+		self.next_level = next_level
+
 	def run(self):
-		if not CrawlThread.terminated:
-			self.info_list.extend(self.current_level_info)
-			self.crawler.crawl(self.next_url, self.next_level, self.info_list)
+		self.info_list.extend(self.current_level_info)
+		self.crawler.crawl(self.next_url, self.next_level, self.info_list)
 
 class Selector():
 	def __init__(self, css_selector):
@@ -74,15 +87,27 @@ class Crawler():
 
 			self.moveToLast(selectors, redirection_selector_index)
 
-			(target_length, list_info_list) = self.getListInfoList(html_doc, selectors[0:-1], expect_length = redirection_link_count)
+			(target_length, list_info_list) = self.getListInfoList(
+				html_doc, selectors[0:-1], expect_length = redirection_link_count)
 			info_count = len(list_info_list) # The total number of newly-added info in this level
 
 			for i in range(redirection_link_count):
 				current_level_info = []
 				for j in range(info_count):
 					current_level_info.append(list_info_list[j][i])
-				crawl_thread = CrawlThread(self, information_list, current_level_info, redirection_links[i], level + 1)
-				crawl_thread.start()
+				while True:
+					crawl_thread = ThreadPool.poll()
+					if (crawl_thread is None):
+						time.sleep(1)
+					else:
+						print("Start a new thread...")
+						crawl_thread.setProperty(
+							info_list = information_list,
+							current_level_info = current_level_info,
+							next_url = redirection_links[i],
+							next_level = level + 1)
+						crawl_thread.start()
+						break
 
 		else: # This is the last level in our crawling process
 			(target_length, list_info_list) = self.getListInfoList(html_doc, selectors)
@@ -103,8 +128,7 @@ class Crawler():
 		for info_selector in information_selector_list:
 			ret_list.append(self.getValues(html_doc, info_selector))
 		target_length = self.__checkValidity(information_selector_list, ret_list, expect_length)
-		if target_length <= 0:
-			raise ValueError("Invalid information list size")
+		assert(target_length > 0), "Invalid information list size"
 		self.__adjustLength(ret_list, target_length)
 		return (target_length, ret_list)
 
@@ -132,18 +156,17 @@ class Crawler():
 			info_selector = info_selector_list[i]
 			info_list = list_info_list[i]
 			if info_selector.data_org == "combination":
-				assert (len(info_list) == 1), "Information list with combination org doesn't give a list of size 1"
+				assert(len(info_list) == 1), "Information list with combination org doesn't give a list of size 1"
 				combination_length = 1
 			else: # data_org is "separate"
 				if separate_length == -1:
 					separate_length = len(info_list)
-				assert (separate_length == len(info_list)), "Inconsistent information list size"
-
+				assert(separate_length == len(info_list)), "Inconsistent information list size"
 		if expect_length is None:
 			return separate_length if separate_length != -1 else combination_length
 		else: # expect_length is not None. In other words, current webpage contains redirection link(s)
 			if separate_length != -1:
-				assert (separate_length == expect_length), "Info list size not match the number of redirection links"
+				assert(separate_length == expect_length), "Info list size not match the number of redirection links"
 			return expect_length
 
 	def __adjustLength(self, list_info_list, target_length):
@@ -199,26 +222,30 @@ def parseArgs():
 	# Last level shouldn't have any redirection link
 	# Any level shouldn't have more than one redirection link
 	# Checking if given data type is valid enum
+	# Ensure thread must be no smaller than 1
 	parser = argparse.ArgumentParser(description='Web crawler')
 	parser.add_argument('-url', nargs='?', required=True, help='the url of a webpage to start with')
 	parser.add_argument('-css', nargs='+', required=True, help='the list of css to capture webpage information')
 	parser.add_argument('-domain', nargs='?', help='the base domain for each relative redirection path')
+	parser.add_argument('-thread', nargs='?', type=int, required=True, help='threads for the crawling task')
 	args = parser.parse_args();
 
-	return (args.url, args.css, args.domain)
+	return (args.url, args.css, args.domain, args.thread)
 
 if __name__ == '__main__':
 	try:
-		base_url, css_selectors, domain = parseArgs()
+		base_url, css_selectors, domain, pool_size = parseArgs()
 		crawler = Crawler(css_selectors, domain)
+		ThreadPool.init(pool_size, crawler) # initialize thread pool
 		start_time = time.time()
 		crawler.crawl(base_url, 0, [])
 		while threading.active_count() > 1:
 			time.sleep(0.5)
 		end_time = time.time()
 		print("Running Time: " + str(end_time - start_time) + " seconds")
-		crawler.output.close()
 	except KeyboardInterrupt:
 		print("Program is terminated with ctrl + c")
-		CrawlThread.terminated = True
 		raise
+	finally:
+		if 'crawler' in locals():
+			crawler.output.close()
