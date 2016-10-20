@@ -19,7 +19,7 @@ class ThreadPool():
 
 	@staticmethod
 	def poll():
-		print("Starting new thread...")
+		print("New thread starting...")
 		return CrawlThread(ThreadPool.crawler) if threading.active_count() < ThreadPool.pool_size + 1 else None
 
 class CrawlThread(threading.Thread):
