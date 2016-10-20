@@ -237,9 +237,11 @@ if __name__ == '__main__':
 		base_url, css_selectors, domain, pool_size = parseArgs()
 		crawler = Crawler(css_selectors, domain)
 		ThreadPool.init(pool_size, crawler) # initialize thread pool
+		first_crawl_thread = ThreadPool.poll()
+		first_crawl_thread.setProperty(info_list = [],	current_level_info = [], next_url = base_url, next_level = 0)
 		start_time = time.time()
-		crawler.crawl(base_url, 0, [])
-		while threading.active_count() > 1:
+		first_crawl_thread.start()
+		while threading.active_count() > 1: # Main thread will always be active unless exception thrown here
 			time.sleep(0.5)
 		end_time = time.time()
 		print("Running Time: " + str(end_time - start_time) + " seconds")
