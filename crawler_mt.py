@@ -4,6 +4,7 @@ import httplib2
 from bs4 import BeautifulSoup
 import time
 import threading
+import BaseUrlPopulator
 
 def defensiveCopy(info_list):
 	copy = []
@@ -19,7 +20,6 @@ class ThreadPool():
 
 	@staticmethod
 	def poll():
-		print("New thread starting...")
 		return CrawlThread(ThreadPool.crawler) if threading.active_count() < ThreadPool.pool_size + 1 else None
 
 class CrawlThread(threading.Thread):
@@ -92,23 +92,10 @@ class Crawler():
 			info_count = len(list_info_list) # The total number of newly-added info in this level
 
 			for i in range(redirection_link_count):
-				current_level_info = []
 				for j in range(info_count):
-					current_level_info.append(list_info_list[j][i])
-				while True:
-					crawl_thread = ThreadPool.poll()
-					if (crawl_thread is None):
-						time.sleep(1)
-					else:
-						print("Start a new thread...")
-						crawl_thread.setProperty(
-							info_list = information_list,
-							current_level_info = current_level_info,
-							next_url = redirection_links[i],
-							next_level = level + 1)
-						crawl_thread.start()
-						break
-
+					information_list.append(list_info_list[j][i])
+				self.crawl(redirection_links[i], level + 1, information_list)
+				del information_list[-info_count : ]
 		else: # This is the last level in our crawling process
 			(target_length, list_info_list) = self.getListInfoList(html_doc, selectors)
 			info_count = len(list_info_list) # The total number of newly-added info in this level
@@ -117,7 +104,7 @@ class Crawler():
 				for j in range(info_count):
 					information_list.append(list_info_list[j][i])
 				self.write(information_list)
-				del information_list[-info_count: ]
+				del information_list[-info_count : ]
 
 	def getListInfoList(self, html_doc, information_selector_list, expect_length = None):
 		"""
@@ -156,7 +143,9 @@ class Crawler():
 			info_selector = info_selector_list[i]
 			info_list = list_info_list[i]
 			if info_selector.data_org == "combination":
-				assert(len(info_list) == 1), "Information list with combination org doesn't give a list of size 1"
+				if len(info_list) != 1:
+					print("WARNING: Information list with combination org doesn't give a list of size 1")
+					list_info_list[i] = [""]
 				combination_length = 1
 			else: # data_org is "separate"
 				if separate_length == -1:
@@ -213,7 +202,8 @@ class Crawler():
 	def write(self, information_list):
 		output_str = "\t".join(information_list) + "\n"
 		self.write_lock.acquire()
-		self.output.write(output_str.encode("UTF-8"))
+		# self.output.write(output_str.encode("UTF-8"))
+		self.output.write(output_str)
 		self.write_lock.release()
 
 def parseArgs():
@@ -234,13 +224,21 @@ def parseArgs():
 
 if __name__ == '__main__':
 	try:
-		base_url, css_selectors, domain, pool_size = parseArgs()
+		base_url_template, css_selectors, domain, pool_size = parseArgs()
 		crawler = Crawler(css_selectors, domain)
 		ThreadPool.init(pool_size, crawler) # initialize thread pool
-		first_crawl_thread = ThreadPool.poll()
-		first_crawl_thread.setProperty(info_list = [],	current_level_info = [], next_url = base_url, next_level = 0)
+		url_generator = BaseUrlPopulator.url_generator(base_url_template)
+		base_urls = url_generator.generate()
 		start_time = time.time()
-		first_crawl_thread.start()
+		while base_urls:
+			thread = ThreadPool.poll()
+			if thread is not None:
+				print("New thread starting...")
+				url = base_urls.pop(0)
+				thread.setProperty(info_list = [],	current_level_info = [], next_url = url, next_level = 0)
+				thread.start()
+			else:
+				time.sleep(1)
 		while threading.active_count() > 1: # Main thread will always be active unless exception thrown here
 			time.sleep(0.5)
 		end_time = time.time()
