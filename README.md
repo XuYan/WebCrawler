@@ -1,5 +1,5 @@
 # Web Crawler
-This is a webpage crawler, written with Python, that takes a start webpage and data selectors as inputs and outputs information you care to a file.
+This is a multi-thread webpage crawler, written with Python, that takes a start webpage and data selectors as inputs and outputs information you care to a file.
 The crawler crawls webpages recursively. The whole process works like a pipe. The crawling outputs of previous webpage will serve as inputs to crawling next webpage.
 For details, refer to Usage section below.
 
@@ -18,7 +18,9 @@ E.g. python crawler.py [args]
 
  - Required Arguments:
 
-		-url: The url of starting webpage. This is the first webpage to start crawling
+		-url: The url of starting webpage. This is the first webpage to start crawling.
+		      This url may contain configurable fields surrounded by curly braces.
+		      The values of the configurable fields are determined by a helper module --- BaseUrlPopulator
 		-selectors: The crawling instruction string always with the following format
 			        **data_type|data_source|data_org|css_selector**
 			        Crawler accepts multiple selectors for one webpage. When specifying multiple,
@@ -46,6 +48,7 @@ E.g. python crawler.py [args]
 				                  "separate": used when EACH data in list is for one record
 				                  "combination": used when ALL data in list are for one record
 			        **css_selector:** CSS selectors to select html elements in DOM tree
+		-thread: The max number of threads that can be started for the crawling task (Not including the main thread)
 
  - Optional Arguments:
 
@@ -55,9 +58,10 @@ E.g. python crawler.py [args]
 
 **Examples:**
 
-> python crawler.py -domain "http://www.yellowpages.com" -url "http://www.yellowpages.com/search?search_terms=event+coordinate&geo_location_terms=bellevue%2C+WA&page=1"
--css "redirection|attribute href|separate|div.v-card > div.info > h3.n > a"
-     "information|element|combination|div.sales-info > h1, information|attribute href|combination|div.business-card > section > footer > a.email-business"
+```
+python crawler_mt.py -domain "http://www.yellowpages.com" -url "http://www.yellowpages.com/search?search_terms=event+coordinate&geo_location_terms={city}+WA&page={page}" -css "redirection|attribute href|separate|div.v-card > div.info > h3.n > a" "information|element|combination|div.sales-info > h1, information|attribute href|combination|div.business-card > section > footer > a.email-business" -thread 2
+
+```
 
 ## Authors
 
